@@ -44,9 +44,22 @@ public:
 
 
 int main() { 
-	int numMatrices = 3;
-	int rows = 3;
-	int columns = 3;
+
+	int numMatrices;
+	cout << "How many matrices? ";
+	cin >> numMatrices;
+	cout << "\n";
+
+	int rows;
+	cout << "How many rows in each matrix? ";
+	cin >> rows;
+	cout << "\n";
+
+	int columns;
+	cout << "How many columns in each matrix? ";
+	cin >> columns;
+	cout << "\n";
+
 	srand(time(0));
 	for (int k=0; k < numMatrices; k++) {
 		Matrix matrix(rows, columns);
