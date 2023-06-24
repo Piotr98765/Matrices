@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <vector>
 using namespace std;
 
 
@@ -15,13 +16,6 @@ public:
 		for (int i = 0; i < rows; i++) {
 			data[i] = new int[columns];
 		}
-	}
-
-	~Matrix() {
-		for (int i = 0; i < rows; i++){
-			delete[] data[i];
-		}
-		delete[] data;
 	}
 
 	void fillWithNums() {
@@ -61,14 +55,18 @@ int main() {
 	cout << "\n";
 
 	srand(time(0));
+
+	vector<Matrix> matrices;
+
 	for (int k=0; k < numMatrices; k++) {
 		Matrix matrix(rows, columns);
 		matrix.fillWithNums();
+		matrices.push_back(matrix);
+	}
 
-
-		cout << "Matrix " << k+1 << "\n";
-		matrix.display();
-		cout << "\n";
+	for (int k = 0; k < numMatrices; k++) {
+		cout << "This is " << k + 1 << " matrix." << "\n";
+		matrices[k].display();
 	}
 
 	return 0;
