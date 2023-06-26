@@ -27,7 +27,7 @@ public:
     }
 
     friend void displayMatrix(const Matrix& matrix);
-    friend void matrixAddition(vector<Matrix>& matrices, const Matrix& matrix1, const Matrix& matrix2);
+    friend void matrixAddition(vector<Matrix>& matrices);
 };
 
 void displayMatrix(const Matrix& matrix) {
@@ -42,7 +42,23 @@ void displayMatrix(const Matrix& matrix) {
     }
 }
 
-void matrixAddition(vector<Matrix>& matrices, const Matrix& matrix1, const Matrix& matrix2) {
+void matrixAddition(vector<Matrix>& matrices) {
+	int numOfFirstMatrix;
+	int numOfSecondMatrix;
+
+	cout << "Which matrices do you want to add?" << "\n";
+
+	cout << "First matrix: ";
+	cin >> numOfFirstMatrix;
+	numOfFirstMatrix -= 1;
+
+	cout << "Second matrix: ";
+	cin >> numOfSecondMatrix;
+	numOfSecondMatrix -= 1;
+
+	Matrix matrix1 = matrices[numOfFirstMatrix];
+	Matrix matrix2 = matrices[numOfSecondMatrix];  
+
     if (matrix1.rows != matrix2.rows || matrix1.columns != matrix2.columns) {
         cout << "Matrices have incompatible dimensions for addition.";
         return;
@@ -60,7 +76,9 @@ void matrixAddition(vector<Matrix>& matrices, const Matrix& matrix1, const Matri
     cout << "Result of addition: " << "\n";
     matrices.push_back(result);
     displayMatrix(result);
+
 }
+
 
 int main() {
     int numMatrices;
@@ -93,7 +111,8 @@ int main() {
         displayMatrix(matrices[k]);
     }
 
-    matrixAddition(matrices, matrices[0], matrices[1]);
+    
+    matrixAddition(matrices);
 
     return 0;
 }
