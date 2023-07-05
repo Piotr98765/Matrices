@@ -5,6 +5,8 @@
 #include <random>
 using namespace std;
 
+int numMatrices;
+
 class Matrix {
 private:
     int rows;
@@ -12,6 +14,7 @@ private:
     vector<int> data;
 
 public:
+    Matrix() : rows(0), columns(0) {}
     Matrix(int numRows, int numColumns) : rows(numRows), columns(numColumns), data(numRows * numColumns) {}
 
     void fillWithNums() {
@@ -43,45 +46,59 @@ void displayMatrix(const Matrix& matrix) {
 }
 
 void matrixAddition(vector<Matrix>& matrices) {
-	int numOfFirstMatrix;
-	int numOfSecondMatrix;
+    int numOfMatricesToAdd;
 
-	cout << "Which matrices do you want to add?" << "\n";
+    cout << "How many matrices do you want to add? ";
+    cin >> numOfMatricesToAdd;
 
-	cout << "First matrix: ";
-	cin >> numOfFirstMatrix;
-	numOfFirstMatrix -= 1;
+    vector<int> indices(numOfMatricesToAdd);
 
-	cout << "Second matrix: ";
-	cin >> numOfSecondMatrix;
-	numOfSecondMatrix -= 1;
+    cout << "Enter the indices of the matrices you want to add (1-" << matrices.size() << "):\n";
 
-	Matrix matrix1 = matrices[numOfFirstMatrix];
-	Matrix matrix2 = matrices[numOfSecondMatrix];  
-
-    if (matrix1.rows != matrix2.rows || matrix1.columns != matrix2.columns) {
-        cout << "Matrices have incompatible dimensions for addition.";
-        return;
+    for (int i = 0; i < numOfMatricesToAdd; i++) {
+        cout << "Matrix " << i + 1 << ": ";
+        cin >> indices[i];
+        indices[i]--; // Adjust index to match vector indexing (starting from 0)
     }
 
-    Matrix result(matrix1.rows, matrix1.columns);
+    bool validIndices = true;
+    Matrix result;
 
-    for (int i = 0; i < matrix1.rows; i++) {
-        for (int j = 0; j < matrix1.columns; j++) {
-            result.data[i * matrix1.columns + j] = matrix1.data[i * matrix1.columns + j] +
-                                                   matrix2.data[i * matrix1.columns + j];
+    for (int i = 0; i < numOfMatricesToAdd; i++) {
+        if (indices[i] < 0 || indices[i] >= matrices.size()) {
+            cout << "Invalid index for Matrix " << i + 1 << ". Please enter a valid index.\n";
+            validIndices = false;
+            break;
+        }
+
+        if (i == 0) {
+            result = matrices[indices[i]];
+        } else {
+            Matrix& matrix = matrices[indices[i]];
+
+            if (result.rows != matrix.rows || result.columns != matrix.columns) {
+                cout << "Matrices have incompatible dimensions for addition.\n";
+                return;
+            }
+
+            for (int j = 0; j < result.rows; j++) {
+                for (int k = 0; k < result.columns; k++) {
+                    result.data[j * result.columns + k] += matrix.data[j * result.columns + k];
+                }
+            }
         }
     }
 
-    cout << "Result of addition: " << "\n";
-    matrices.push_back(result);
-    displayMatrix(result);
-
+    if (validIndices) {
+        cout << "Result of addition:\n";
+        matrices.push_back(result);
+        numMatrices++;
+        displayMatrix(result);
+        cout << "\n";
+    }
 }
 
-
 int main() {
-    int numMatrices;
     cout << "How many matrices? ";
     cin >> numMatrices;
     cout << "\n";
@@ -113,6 +130,11 @@ int main() {
 
     
     matrixAddition(matrices);
+
+    for (int k = 0; k < numMatrices; k++) {
+        cout << "This is " << k + 1 << " matrix." << "\n";
+        displayMatrix(matrices[k]);
+    }
 
     return 0;
 }
