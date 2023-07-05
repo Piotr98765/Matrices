@@ -31,6 +31,7 @@ public:
 
     friend void displayMatrix(const Matrix& matrix);
     friend void matrixAddition(vector<Matrix>& matrices);
+    friend void matrixSubtraction(vector<Matrix>& matrices);
 };
 
 void displayMatrix(const Matrix& matrix) {
@@ -98,6 +99,40 @@ void matrixAddition(vector<Matrix>& matrices) {
     }
 }
 
+void matrixSubtraction(vector<Matrix>& matrices) {
+    int numOfFirstMatrix;
+    int numOfSecondMatrix;
+
+    cout << "Which matrices do you want to subtract?" << "\n";
+
+    cout << "First matrix: ";
+    cin >> numOfFirstMatrix;
+    numOfFirstMatrix -= 1;
+
+    cout << "Second matrix: ";
+    cin >> numOfSecondMatrix;
+    numOfSecondMatrix -= 1;
+
+    Matrix matrix1 = matrices[numOfFirstMatrix];
+    Matrix matrix2 = matrices[numOfSecondMatrix];  
+
+    if (matrix1.rows != matrix2.rows || matrix1.columns != matrix2.columns) {
+        cout << "Matrices have incompatible dimensions for subtraction.";
+        return;
+    }
+    Matrix result(matrix1.rows, matrix1.columns);
+    for (int i = 0; i < matrix1.rows; i++) {
+        for (int j = 0; j < matrix1.columns; j++) {
+            result.data[i * matrix1.columns + j] = matrix1.data[i * matrix1.columns + j] -
+                                                   matrix2.data[i * matrix1.columns + j];
+        }
+    }
+    cout << "Result of subtraction: " << "\n";
+    matrices.push_back(result);
+    displayMatrix(result);
+
+}
+
 int main() {
     cout << "How many matrices? ";
     cin >> numMatrices;
@@ -130,6 +165,8 @@ int main() {
 
     
     matrixAddition(matrices);
+    matrixSubtraction(matrices);
+
 
     for (int k = 0; k < numMatrices; k++) {
         cout << "This is " << k + 1 << " matrix." << "\n";
