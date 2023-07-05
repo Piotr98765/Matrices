@@ -29,18 +29,61 @@ public:
         }
     }
 
-    friend void displayMatrix(const Matrix& matrix);
+
+    int getRows() const {
+        return rows;
+    }
+
+    int getColumns() const {
+        return columns;
+    }
+
+    int getElement(int row, int column) const {
+        return data[row * columns + column];
+    }
+
+    friend void displayMatrix(vector<Matrix>& matrices);
     friend void matrixAddition(vector<Matrix>& matrices);
     friend void matrixSubtraction(vector<Matrix>& matrices);
 };
 
-void displayMatrix(const Matrix& matrix) {
-    int rows = matrix.rows;
-    int columns = matrix.columns;
+vector<Matrix> createMatrices() {
+    cout << "How many matrices to create? ";
+    cin >> numMatrices;
+    cout << "\n";
 
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < columns; j++) {
-            cout << matrix.data[i * columns + j] << " ";
+    int rows;
+    cout << "How many rows in each matrix? ";
+    cin >> rows;
+    cout << "\n";
+
+    int columns;
+    cout << "How many columns in each matrix? ";
+    cin >> columns;
+    cout << "\n";
+
+    srand(time(0));
+
+    vector<Matrix> matrices;
+
+    for (int k = 0; k < numMatrices; k++) {
+        Matrix matrix(rows, columns);
+        matrix.fillWithNums();
+        matrices.push_back(matrix);
+    }
+
+    return matrices;
+}
+
+void displayMatrix( vector<Matrix>& matrices) {
+    for (int k = 0; k < matrices.size(); k++) {
+        cout << "This is matrix " << k + 1 << ":\n";
+        Matrix& matrix = matrices[k];
+        for (int i = 0; i < matrix.getRows(); i++) {
+            for (int j = 0; j < matrix.getColumns(); j++) {
+                cout << matrix.getElement(i, j) << " ";
+            }
+            cout << "\n";
         }
         cout << "\n";
     }
@@ -94,7 +137,7 @@ void matrixAddition(vector<Matrix>& matrices) {
         cout << "Result of addition:\n";
         matrices.push_back(result);
         numMatrices++;
-        displayMatrix(result);
+        //displayMatrix(result);
         cout << "\n";
     }
 }
@@ -129,48 +172,50 @@ void matrixSubtraction(vector<Matrix>& matrices) {
     }
     cout << "Result of subtraction: " << "\n";
     matrices.push_back(result);
-    displayMatrix(result);
+    //displayMatrix(result);
 
 }
 
 int main() {
-    cout << "How many matrices? ";
-    cin >> numMatrices;
-    cout << "\n";
-
-    int rows;
-    cout << "How many rows in each matrix? ";
-    cin >> rows;
-    cout << "\n";
-
-    int columns;
-    cout << "How many columns in each matrix? ";
-    cin >> columns;
-    cout << "\n";
-
-    srand(time(0));
 
     vector<Matrix> matrices;
+    cout << "Welcome to Matrix Program ";
+    cout << "\n\n";
 
-    for (int k = 0; k < numMatrices; k++) {
-        Matrix matrix(rows, columns);
-        matrix.fillWithNums();
-        matrices.push_back(matrix);
-    }
+    bool exitMenu = false;
 
-    for (int k = 0; k < numMatrices; k++) {
-        cout << "This is " << k + 1 << " matrix." << "\n";
-        displayMatrix(matrices[k]);
-    }
+    while (!exitMenu) {
+        cout << "Menu:\n";
+        cout << "1. Create matrices\n";
+        cout << "2. Display matrices\n";
+        cout << "3. Perform matrix addition\n";
+        cout << "4. Perform matrix subtraction\n";
+        cout << "5. Exit\n";
+        cout << "Enter your choice: ";
 
-    
-    matrixAddition(matrices);
-    matrixSubtraction(matrices);
+        int choice;
+        cin >> choice;
 
-
-    for (int k = 0; k < numMatrices; k++) {
-        cout << "This is " << k + 1 << " matrix." << "\n";
-        displayMatrix(matrices[k]);
+        switch (choice) {
+            case 1:
+                matrices = createMatrices();
+                break;
+            case 2:
+                displayMatrix(matrices);
+                break;
+            case 3:
+                matrixAddition(matrices);
+                break;
+            case 4:
+                matrixSubtraction(matrices);
+                break;
+            case 5:
+                exitMenu = true;
+                break;
+            default:
+                cout << "Invalid choice. Please try again.\n";
+                break;
+        }
     }
 
     return 0;
