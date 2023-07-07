@@ -43,6 +43,7 @@ public:
     friend void displayMatrix(vector<Matrix>& matrices);
     friend void matrixAddition(vector<Matrix>& matrices);
     friend void matrixSubtraction(vector<Matrix>& matrices);
+    friend void matrixMultiplyConstant(vector<Matrix>& matrices);
     friend void matrixMultiply(vector<Matrix>& matrices);
 };
 
@@ -133,10 +134,8 @@ void matrixAddition(vector<Matrix>& matrices) {
     }
 
     if (validIndices) {
-        cout << "Result of addition:\n";
         matrices.push_back(result);
         numMatrices++;
-        //displayMatrix(result);
         cout << "\n";
     }
 }
@@ -171,28 +170,50 @@ void matrixSubtraction(vector<Matrix>& matrices) {
     }
     cout << "Result of subtraction: " << "\n";
     matrices.push_back(result);
-    //displayMatrix(result);
+    numMatrices++;
+
 
 }
 
-void matrixMultiply(vector<Matrix>& matrices) {
+void matrixMultiplyConstant(vector<Matrix>& matrices) {
+    int constant;
+    int numOfFirstMatrix;
+    cout << "Type constant by which you want to multiply the matrix: ";
+    cin >> constant;
+    cout << "Type which matrix to multiply by the constant: ";
+    cin >> numOfFirstMatrix;
+    numOfFirstMatrix -= 1;
+    Matrix matrix1 = matrices[numOfFirstMatrix];
+    Matrix result(matrix1.getRows(), matrix1.getColumns());
+    for (int i = 0; i < matrix1.getRows(); i++) {
+        for (int j = 0; j < matrix1.getColumns(); j++) {
+            result.data[i * matrix1.getColumns() + j] = matrix1.getElement(i, j) * constant;
+        }
+    }
+    matrices.push_back(result);
+    numMatrices++;
+}
 
+void matrixMultiply(vector<Matrix>& matrices) {
     bool exitMenu = false;
     while (!exitMenu) {
         cout << "Which type of operation do you want to perform?\n";
         cout << "1. Multiply by constant\n";
         cout << "2. Multiply two matrices\n";
         cout << "3. Back to main menu\n";
+        cout << "Enter your choice: ";
 
         int choice;
         cin >> choice;
 
         switch (choice) {
             case 1:
+                matrixMultiplyConstant(matrices);
                 break;
             case 2:
                 break;
             case 3:
+                exitMenu = true;
                 break;
             case 4:
                 cout << "Invalid choice. Please try again.\n";
@@ -200,29 +221,6 @@ void matrixMultiply(vector<Matrix>& matrices) {
         }
 
     }
-
-
-    int constant;
-    int numOfFirstMatrix;
-    int numOfSecondMatrix;
-
-    cout << "Type constat by which you want to multiply matrix\n";
-    cin >> constant;
-    cout << "Type which matrix to multiply by the constant: ";
-    cin >> numOfFirstMatrix;
-    numOfFirstMatrix -= 1;
-
-    Matrix matrix1 = matrices[numOfFirstMatrix];
-    Matrix result(matrix1.rows, matrix1.columns);
-
-    for (int i = 0; i < matrix1.rows; i++) {
-        for (int j = 0; j < matrix1.columns; j++) {
-            result.data[i * matrix1.columns + j] = matrix1.data[i * matrix1.columns + j] * constant;
-        }
-    }
-
-    cout << "Result of multiplication: " << "\n";
-    matrices.push_back(result);
 }
 
 int main() {
@@ -231,9 +229,9 @@ int main() {
     cout << "Welcome to Matrix Program ";
     cout << "\n\n";
 
-    bool exitMenu = false;
+    bool exitMainMenu  = false;
 
-    while (!exitMenu) {
+    while (!exitMainMenu ) {
         cout << "Menu:\n";
         cout << "1. Create matrices\n";
         cout << "2. Display matrices\n";
@@ -263,7 +261,7 @@ int main() {
                 matrixMultiply(matrices);
                 break;
             case 6:
-                exitMenu = true;
+                exitMainMenu  = true;
                 break;
             default:
                 cout << "Invalid choice. Please try again.\n";
