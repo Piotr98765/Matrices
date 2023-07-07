@@ -19,7 +19,7 @@ public:
     void fillWithNums() {
         random_device rd;
         mt19937 generator(rd());
-        uniform_int_distribution<int> distribution(0, 99);
+        uniform_int_distribution<int> distribution(0, 9);
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
@@ -40,10 +40,12 @@ public:
         return data[row * columns + column];
     }
 
+    friend void addMatrices(vector<Matrix>& matrices);
     friend void displayMatrix(vector<Matrix>& matrices);
     friend void matrixAddition(vector<Matrix>& matrices);
     friend void matrixSubtraction(vector<Matrix>& matrices);
     friend void matrixMultiplyConstant(vector<Matrix>& matrices);
+    friend void matrixMultiplyTwoMatrices(vector<Matrix>& matrices);
     friend void matrixMultiply(vector<Matrix>& matrices);
 };
 
@@ -73,6 +75,32 @@ vector<Matrix> createMatrices() {
     }
 
     return matrices;
+}
+
+void addMatrices(vector<Matrix>& matrices) {
+    int numMatricesToAdd;
+
+    cout << "How many matrices do you want to add? ";
+    cin >> numMatricesToAdd;
+    cout << "\n";
+
+    int rows;
+    cout << "How many rows in each matrix? ";
+    cin >> rows;
+    cout << "\n";
+
+    int columns;
+    cout << "How many columns in each matrix? ";
+    cin >> columns;
+    cout << "\n";
+
+    srand(time(0));
+
+    for (int k = 0; k < numMatricesToAdd; k++) {
+        Matrix matrix(rows, columns);
+        matrix.fillWithNums();
+        matrices.push_back(matrix);
+    }
 }
 
 void displayMatrix( vector<Matrix>& matrices) {
@@ -194,6 +222,48 @@ void matrixMultiplyConstant(vector<Matrix>& matrices) {
     numMatrices++;
 }
 
+
+void matrixMultiplyTwoMatrices(vector<Matrix>& matrices) {
+    int numOfFirstMatrix;
+    int numOfSecondMatrix;
+
+    cout << "Which matrices do you want to multiply?\n";
+
+    cout << "First matrix: ";
+    cin >> numOfFirstMatrix;
+    numOfFirstMatrix -= 1;
+
+    cout << "Second matrix: ";
+    cin >> numOfSecondMatrix;
+    numOfSecondMatrix -= 1;
+
+    Matrix matrix1 = matrices[numOfFirstMatrix];
+    Matrix matrix2 = matrices[numOfSecondMatrix];
+
+    if (matrix1.getColumns() != matrix2.getRows()) {
+        cout << "Invalid dimensions for matrix multiplication.";
+        return;
+    }
+
+    int resultRows = matrix1.getRows();
+    int resultColumns = matrix2.getColumns();
+    Matrix result(resultRows, resultColumns);
+
+    for (int i = 0; i < resultRows; i++) {
+        for (int j = 0; j < resultColumns; j++) {
+            int sum = 0;
+            for (int k = 0; k < matrix1.getColumns(); k++) {
+                sum += matrix1.getElement(i, k) * matrix2.getElement(k, j);
+            }
+            result.data[i * resultColumns + j] = sum;
+        }
+    }
+
+    cout << "Result of matrix multiplication: " << "\n";
+    matrices.push_back(result);
+    numMatrices++;
+}
+
 void matrixMultiply(vector<Matrix>& matrices) {
     bool exitMenu = false;
     while (!exitMenu) {
@@ -211,6 +281,7 @@ void matrixMultiply(vector<Matrix>& matrices) {
                 matrixMultiplyConstant(matrices);
                 break;
             case 2:
+                matrixMultiplyTwoMatrices(matrices);
                 break;
             case 3:
                 exitMenu = true;
@@ -234,11 +305,12 @@ int main() {
     while (!exitMainMenu ) {
         cout << "Menu:\n";
         cout << "1. Create matrices\n";
-        cout << "2. Display matrices\n";
-        cout << "3. Perform matrix addition\n";
-        cout << "4. Perform matrix subtraction\n";
-        cout << "5. Perform matrix multiply\n";
-        cout << "6. Exit\n";
+        cout << "2. Add matrices\n";
+        cout << "3. Display matrices\n";
+        cout << "4. Perform matrix addition\n";
+        cout << "5. Perform matrix subtraction\n";
+        cout << "6. Perform matrix multiply\n";
+        cout << "7. Exit\n";
         cout << "Enter your choice: ";
 
         int choice;
@@ -249,18 +321,21 @@ int main() {
                 matrices = createMatrices();
                 break;
             case 2:
-                displayMatrix(matrices);
+                addMatrices(matrices);
                 break;
             case 3:
-                matrixAddition(matrices);
+                displayMatrix(matrices);
                 break;
             case 4:
-                matrixSubtraction(matrices);
+                matrixAddition(matrices);
                 break;
             case 5:
-                matrixMultiply(matrices);
+                matrixSubtraction(matrices);
                 break;
             case 6:
+                matrixMultiply(matrices);
+                break;
+            case 7:
                 exitMainMenu  = true;
                 break;
             default:
@@ -268,6 +343,6 @@ int main() {
                 break;
         }
     }
-
+    
     return 0;
 }
