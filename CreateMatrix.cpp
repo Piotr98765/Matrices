@@ -12,7 +12,6 @@ private:
     int rows;
     int columns;
     vector<int> data;
-
 public:
     Matrix() : rows(0), columns(0) {}
     Matrix(int numRows, int numColumns) : rows(numRows), columns(numColumns), data(numRows * numColumns) {}
@@ -29,7 +28,6 @@ public:
         }
     }
 
-
     int getRows() const {
         return rows;
     }
@@ -45,6 +43,7 @@ public:
     friend void displayMatrix(vector<Matrix>& matrices);
     friend void matrixAddition(vector<Matrix>& matrices);
     friend void matrixSubtraction(vector<Matrix>& matrices);
+    friend void matrixMultiply(vector<Matrix>& matrices);
 };
 
 vector<Matrix> createMatrices() {
@@ -176,6 +175,30 @@ void matrixSubtraction(vector<Matrix>& matrices) {
 
 }
 
+void matrixMultiply(vector<Matrix>& matrices) {
+    int constant;
+    int numOfFirstMatrix;
+    int numOfSecondMatrix;
+
+    cout << "Type constat by which you want to multiply matrix\n";
+    cin >> constant;
+    cout << "Type which matrix to multiply by the constant: ";
+    cin >> numOfFirstMatrix;
+    numOfFirstMatrix -= 1;
+
+    Matrix matrix1 = matrices[numOfFirstMatrix];
+    Matrix result(matrix1.rows, matrix1.columns);
+
+    for (int i = 0; i < matrix1.rows; i++) {
+        for (int j = 0; j < matrix1.columns; j++) {
+            result.data[i * matrix1.columns + j] = matrix1.data[i * matrix1.columns + j] * constant;
+        }
+    }
+
+    cout << "Result of multiplication: " << "\n";
+    matrices.push_back(result);
+}
+
 int main() {
 
     vector<Matrix> matrices;
@@ -190,7 +213,8 @@ int main() {
         cout << "2. Display matrices\n";
         cout << "3. Perform matrix addition\n";
         cout << "4. Perform matrix subtraction\n";
-        cout << "5. Exit\n";
+        cout << "5. Perform matrix multiply\n";
+        cout << "6. Exit\n";
         cout << "Enter your choice: ";
 
         int choice;
@@ -210,6 +234,9 @@ int main() {
                 matrixSubtraction(matrices);
                 break;
             case 5:
+                matrixMultiply(matrices);
+                break;
+            case 6:
                 exitMenu = true;
                 break;
             default:
