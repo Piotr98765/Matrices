@@ -176,6 +176,32 @@ void matrixSubtraction(vector<Matrix>& matrices) {
 }
 
 void matrixMultiply(vector<Matrix>& matrices) {
+
+    bool exitMenu = false;
+    while (!exitMenu) {
+        cout << "Which type of operation do you want to perform?\n";
+        cout << "1. Multiply by constant\n";
+        cout << "2. Multiply two matrices\n";
+        cout << "3. Back to main menu\n";
+
+        int choice;
+        cin >> choice;
+
+        switch (choice) {
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                cout << "Invalid choice. Please try again.\n";
+                break;            
+        }
+
+    }
+
+
     int constant;
     int numOfFirstMatrix;
     int numOfSecondMatrix;
